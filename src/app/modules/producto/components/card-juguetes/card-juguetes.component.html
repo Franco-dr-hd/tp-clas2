@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col" *ngFor="let producto of coleccionJuguetes">
+
+        <mat-card class="example-card" appearance="outlined">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>{{producto.nombre}}</mat-card-title>
+              <mat-card-subtitle>{{producto.precio}}</mat-card-subtitle>
+
+              <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCardJuguetes" (click)="mostrarVer(producto)"> Ver más
+              </button>
+              
+            </mat-card-header>
+            <img mat-card-image src="{{producto.imagen}}" alt="Photo of a Shiba Inu">
+            <mat-card-content>
+              <p>
+                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+                bred for hunting.
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button>LIKE</button>
+              <button mat-button>SHARE</button>
+            </mat-card-actions>
+          </mat-card>
+          
+
+    </div>
+</div>
+
+<!-- Modal para ver más información -->
+<div class="modal fade" id="modalCardJuguetes" *ngIf="modalVisible" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{productoSeleccionado.nombre}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+          <img src="{{productoSeleccionado.imagen}}" alt="{{productoSeleccionado.alt}}">
+  
+          <div class="mb-3">
+            {{productoSeleccionado.descripcion}}
+          </div>
+  
+          <div class="mb-3">
+            {{productoSeleccionado.precio}}
+          </div>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cerrar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar al carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
