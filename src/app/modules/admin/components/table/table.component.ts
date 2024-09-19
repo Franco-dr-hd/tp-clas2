@@ -18,6 +18,10 @@ export class TableComponent {
   // Variable va a tomar el producto que nosotros elejimos 
   productoSeleccionado!: Producto; // <- Recibe valores vacíos 
 
+  nombreImagen!: string // Obtendrá  el nombre de la imagen
+
+  imagen!: string // Obtendrá la ruta de la imagen 
+
   // Definimos formulario para los productos
   /**
    * Atributos alfanuméricos (string) se inicializan con comillas simples
@@ -28,7 +32,7 @@ export class TableComponent {
     precio: new FormControl(0, Validators.required),
     descripcion: new FormControl('', Validators.required),
     categoria: new FormControl('', Validators.required),
-    imagen: new FormControl('', Validators.required),
+    //imagen: new FormControl('', Validators.required),
     alt: new FormControl('', Validators.required)
   })
 
@@ -53,25 +57,31 @@ export class TableComponent {
         descripcion: this.producto.value.descripcion!,
         precio: this.producto.value.precio!,
         categoria: this.producto.value.categoria!,
-        imagen: this.producto.value.imagen!,
+        // Imagen ahora toma la URL generada desde Storage
+        imagen: '',
         alt: this.producto.value.alt!
       }
 
+      // Enviamos nombre y url de la imagen; definimos carpeta de imágenes como "producto"
+      await this.servicioCrud.subirImagen(this.nombreImagen, this.imagen, "productos")
+        .then(resp => {
+          // Encapsulamos respuesta y enviamos la informacion obtenida
+          this.servicioCrud.obtenerUrlImagen(resp)
+            .then(url => {
+              // Ahora método crearProducto recibe los datos del formulario y la URL 
+              this.servicioCrud.crearProducto(nuevoProducto, url)
+                .then(producto => {
+                  alert("Ha agregado un nuevo producto con éxito :)");
 
-
-      await this.servicioCrud.crearProducto(nuevoProducto)
-        .then(producto => {
-          alert("Ha agregado un nuevo producto con éxito :)");
-
-          // Limpiamos formulario para agregar nuevos productos 
-          this.producto.reset();
-        })
-        .catch(error => {
-          alert("Hubo un problema al agregar un nuevo producto :(");
+                  // Limpiamos formulario para agregar nuevos productos 
+                  this.producto.reset();
+                })
+                .catch(error => {
+                  alert("Hubo un problema al agregar un nuevo producto :(");
+                })
+            })
         })
     }
-
-
   }
   // Función para alertar al usuaurio del producto que desea eliminar
   mostrarBorrar(productoSeleccionado: Producto) {
@@ -123,11 +133,11 @@ export class TableComponent {
     }
 
     this.servicioCrud.modificarProducto(this.productoSeleccionado.idProducto, datos)
-    .then(producto => {
-      alert("El producto fue editado con éxito.")
-    })
-    .catch(error =>{
-      alert("Hubo un problema al modificar el producto.")
-    });
+      .then(producto => {
+        alert("El producto fue editado con éxito.")
+      })
+      .catch(error => {
+        alert("Hubo un problema al modificar el producto.")
+      });
   }
 }
